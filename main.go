@@ -1,28 +1,26 @@
 package main
 
-import (
-	"encoding/json"
-	"fmt"
-)
+import "fmt"
 
 type (
-	person struct {
-		FirstName string `json:"first_name"`
-		LastName string `json:"last_name"`
+	Printer interface {
+		Print(string)
 	}
+
+	CLIPrinter struct {}
 )
 
-func main() {
-	p := person{
-		FirstName: "Jhon",
-		LastName:  "Doe",
-	}
-
-	plain, err := json.Marshal(p)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(plain))
+func (CLIPrinter) Print(text string) {
+	fmt.Println(text)
 }
+
+func main() {
+	p := &CLIPrinter{}
+	PrintWithSuffix(p, "hello!")
+}
+
+func PrintWithSuffix(p Printer, text string) {
+	p.Print("suffix:"+text)
+}
+
 
