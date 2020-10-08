@@ -1,0 +1,7 @@
+{
+  "restartable": "rs",
+  "verbose": true,
+  "ext": "go",
+  "legacyWatch": false,
+  "exitcrash": false
+}
