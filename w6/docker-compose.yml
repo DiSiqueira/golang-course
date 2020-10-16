@@ -1,0 +1,30 @@
+version: '3'
+services:
+
+# docker run -p 8080:8080 -v /Users/diegosiqueira/Playground/golangw1/w6:/menu-proxy-service 82c0a5492660
+  menu-proxy-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/menu-proxy-service
+    ports:
+      - "8080:8080"
+    restart: always
+
+  menu-proxy-database:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+    - ./migration:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: hello123
+      POSTGRES_USER: mps
+      POSTGRES_DB: menu_proxy_service
+
+#    env_file:
+#      - .env
+#    depends_on:
+#      - rabbitmq
+#      - postgres

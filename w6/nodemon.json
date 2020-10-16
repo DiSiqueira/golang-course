@@ -3,5 +3,5 @@
   "verbose": true,
   "ext": "go",
   "legacyWatch": false,
-  "exitcrash": false
+  "exitcrash": true
 }

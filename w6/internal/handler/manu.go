@@ -11,6 +11,7 @@ import (
 type (
 	Menu struct {
 		menuServiceClient menuService
+		recipeRepository  model.RecipeRepository
 	}
 
 	menuService interface {
@@ -18,9 +19,10 @@ type (
 	}
 )
 
-func NewMenu(menuServiceClient menuService) *Menu {
+func NewMenu(menuServiceClient menuService, recipeRepository model.RecipeRepository) *Menu {
 	return &Menu{
 		menuServiceClient: menuServiceClient,
+		recipeRepository:  recipeRepository,
 	}
 }
 
@@ -43,10 +45,20 @@ func (m Menu) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for _, recipe := range result.Recipes {
+		if m.recipeRepository.Exist(recipe.URL) {
+			continue
+		}
+
+		if err := m.recipeRepository.Save(recipe); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(result); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 }
-
